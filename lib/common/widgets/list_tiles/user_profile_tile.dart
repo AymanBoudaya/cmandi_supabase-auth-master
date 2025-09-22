@@ -19,8 +19,6 @@ class TUserProfileTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Circular image with custom size
-
           CircularImage(
             isNetworkImage: true,
             image: controller.user.value.profileImageUrl!.isNotEmpty
@@ -31,14 +29,13 @@ class TUserProfileTile extends StatelessWidget {
             width: 80,
             height: 80,
           ),
-          const SizedBox(width: 16), // Spacing between image and text
-          // Expanded text section to prevent overflow
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // User name
+                // Nom d'utilisateur
                 Text(
                   controller.user.value.fullName,
                   style: Theme.of(

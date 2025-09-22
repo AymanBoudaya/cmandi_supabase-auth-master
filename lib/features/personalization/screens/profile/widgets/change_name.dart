@@ -27,7 +27,7 @@ class ChangeName extends StatelessWidget {
             /// Headings
             ///
             Text(
-                "Use real name for easy verification, this name will appear on several pages",
+                "Utiliser un nom réel, ce nom va appraître dans plusieurs pages",
                 style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: AppSizes.spaceBtwSections),
             Form(

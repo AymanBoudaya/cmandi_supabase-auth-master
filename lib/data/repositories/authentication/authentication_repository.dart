@@ -20,7 +20,6 @@ class AuthenticationRepository extends GetxController {
   final GetStorage deviceStorage = GetStorage();
   GoTrueClient get _auth => Supabase.instance.client.auth;
 
-  Session? get session => _auth.currentSession;
   User? get authUser => _auth.currentUser;
 
   @override
@@ -39,31 +38,33 @@ class AuthenticationRepository extends GetxController {
         if (event == AuthChangeEvent.signedIn && session != null) {
           // Si signup en cours (pending data), on ne redirige pas encore
           if (pending != null) {
-            print('⏳ Signup flow en cours, attente de vérification OTP');
+            print('Signup flow en cours, attente de vérification OTP');
             return;
           }
 
           // Cas login normal
-          print('✅ Signed in — récupération des infos utilisateur');
+          print('Signed in — récupération des infos utilisateur');
           try {
             await UserRepository.instance.fetchUserDetails();
           } catch (e) {
-            print('⚠️ fetchUserDetails error: $e');
+            print('fetchUserDetails error: $e');
           }
           await TLocalStorage.init(session.user.id);
           Get.offAll(() => const NavigationMenu());
         } else if (event == AuthChangeEvent.signedOut) {
-          print('🔒 Signed out — nettoyage et retour Login');
+          print('Signed out — nettoyage et retour Login');
           await deviceStorage.remove('pending_user_data');
           Get.offAll(() => const LoginScreen());
         }
       } catch (e) {
-        print('❌ Error in auth state change handler: $e');
+        print('Error in auth state change handler: $e');
       }
     });
 
     screenRedirect();
   }
+
+  /// -- Flux de redirection
 
   Future<void> screenRedirect() async {
     final Map<String, dynamic> userData = SignupController.instance.userData;
@@ -81,7 +82,7 @@ class AuthenticationRepository extends GetxController {
       print('authUser emailVerified? $emailVerified');
 
       if (emailVerified) {
-        print('✅ Email déjà vérifié — navigation vers app principale');
+        print('Email déjà vérifié — navigation vers app principale');
         await TLocalStorage.init(user.id);
         Get.offAll(() => const NavigationMenu());
       } else {
@@ -90,7 +91,7 @@ class AuthenticationRepository extends GetxController {
         final pendingEmail = pendingMap?['email'] as String? ?? user.email;
         final pendingUserData =
             pendingMap?['user_data'] as Map<String, dynamic>? ?? userData;
-        print('➡️ Navigation vers OTPVerificationScreen pour $pendingEmail');
+        print('Navigation vers OTPVerificationScreen pour $pendingEmail');
         Get.offAll(() => OTPVerificationScreen(
             email: pendingEmail ?? user.email!, userData: pendingUserData));
       }
@@ -104,10 +105,12 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
+  /// -- S'inscrire avec email par OTP
+
   Future<void> signUpWithEmailOTP(
       String email, Map<String, dynamic> userData) async {
     try {
-      print('📨 Signup OTP → $email');
+      print('Signup OTP → $email');
       await deviceStorage.write('pending_user_data', {
         'email': email,
         'user_data': userData,
@@ -120,20 +123,19 @@ class AuthenticationRepository extends GetxController {
         emailRedirectTo: null,
       );
     } catch (e, st) {
-      print('❌ signUpWithEmailOTP error: $e\n$st');
+      print('signUpWithEmailOTP error: $e\n$st');
       rethrow;
     }
   }
 
-  /* --------------------------------------------------------------------------
-    LOGIN OTP
-  -------------------------------------------------------------------------- */
+  /// Connexion avec OTP
+
   Future<void> sendOtp(String email) async {
     try {
-      print('📨 Login OTP → $email');
+      print('Login OTP => $email');
       await _auth.signInWithOtp(
         email: email,
-        shouldCreateUser: false, // pas de création auto en login
+        shouldCreateUser: false,
         emailRedirectTo: null,
       );
     } catch (e) {
@@ -142,52 +144,34 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /* --------------------------------------------------------------------------
-    RESEND OTP
-  -------------------------------------------------------------------------- */
+  /// -- Renvoyer OTP
+
   Future<void> resendOTP(String email) async {
     try {
-      print('🔄 resendOTP($email)');
+      print('resendOTP($email)');
       await _auth.signInWithOtp(
         email: email,
         shouldCreateUser: false,
         emailRedirectTo: null,
       );
     } catch (e, st) {
-      print('❌ resendOTP error: $e\n$st');
+      print('resendOTP error: $e\n$st');
       rethrow;
     }
   }
 
-  /* --------------------------------------------------------------------------
-    LOGOUT
-  -------------------------------------------------------------------------- */
-  Future<void> logout() async {
-    try {
-      print('🚪 logout');
-      await _auth.signOut();
-      await deviceStorage.remove('pending_user_data');
-      Get.offAll(() => const LoginScreen());
-    } catch (e) {
-      print('❌ logout error: $e');
-      rethrow;
-    }
-  }
+  /// -- Vérification OTP
 
-  /* --------------------------------------------------------------------------
-    VÉRIFICATION OTP
-  -------------------------------------------------------------------------- */
   Future<void> verifyOTP({
     required String email,
     required String otp,
   }) async {
     try {
-      print('🔐 verifyOTP(email=$email, otp=$otp)');
+      print('verifyOTP(email=$email, otp=$otp)');
 
       // Vérifier OTP
       final response = await _auth.verifyOTP(
-        type: OtpType
-            .email, // ⚠️ si c’est vraiment signup, tu peux mettre OtpType.signup
+        type: OtpType.email,
         email: email,
         token: otp,
       );
@@ -203,7 +187,7 @@ class AuthenticationRepository extends GetxController {
           deviceStorage.read('pending_user_data') as Map<String, dynamic>?;
 
       if (pending != null) {
-        print("🆕 Signup détecté avec pending_user_data");
+        print("Signup détecté avec pending_user_data");
         final savedUserData = Map<String, dynamic>.from(
           pending['user_data'] as Map? ?? {},
         );
@@ -223,32 +207,32 @@ class AuthenticationRepository extends GetxController {
           profileImageUrl: _get(savedUserData, 'profile_image_url'),
         );
 
-        print('💾 Sauvegarde nouvel utilisateur: ${userModel.toJson()}');
+        print('Sauvegarde nouvel utilisateur: ${userModel.toJson()}');
         await UserRepository.instance.saveUserRecord(userModel);
 
         await deviceStorage.remove('pending_user_data');
-        print('🗑 pending_user_data supprimé après signup');
+        print('pending_user_data supprimé après signup');
       } else {
-        print("🔑 Login détecté");
+        print("Login détecté");
         final existingUser =
             await UserRepository.instance.fetchUserDetails(supabaseUser.id);
 
         if (existingUser == null) {
           throw Exception("Utilisateur introuvable. Inscription requise.");
         }
-        print("✅ Utilisateur existant trouvé: ${existingUser.id}");
+        print("Utilisateur existant trouvé: ${existingUser.id}");
       }
 
       // Init du stockage local
       await TLocalStorage.init(supabaseUser.id);
 
-      // ⚡ hydrater le UserController
+      // Lecture des données utilisateur
       await UserController.instance.fetchUserRecord();
 
-      // Redirection vers la home
+      // Redirection vers page home
       Get.offAll(() => const NavigationMenu());
     } catch (e, st) {
-      print("❌ Erreur verifyOTP: $e\n$st");
+      print("Erreur verifyOTP: $e\n$st");
       TLoaders.errorSnackBar(
         title: "Erreur Vérification",
         message: e.toString(),
@@ -257,24 +241,40 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
+  /// -- Connexion avec un compte google
+
   Future<void> signInWithGoogle() async {
     try {
-      print('🔄 Tentative de connexion avec Google...');
+      print('Tentative de connexion avec Google...');
 
       final res = await _auth.signInWithOAuth(
-        OAuthProvider.google, // ✅ Utiliser OAuthProvider
+        OAuthProvider.google,
         redirectTo: 'io.supabase.flutterquickstart://login-callback',
-        scopes: null, // optional, default null
+        scopes: null,
         authScreenLaunchMode: LaunchMode.platformDefault,
-        queryParams: null, // optional
+        queryParams: null,
       );
 
-      print('✅ Google Sign-In lancé: $res');
+      print('Google Sign-In lancé: $res');
     } on AuthException catch (e, st) {
-      print('❌ AuthException signInWithGoogle: ${e.message}\n$st');
+      print('AuthException signInWithGoogle: ${e.message}\n$st');
       rethrow;
     } catch (e, st) {
-      print('❌ Unknown error signInWithGoogle: $e\n$st');
+      print('Unknown error signInWithGoogle: $e\n$st');
+      rethrow;
+    }
+  }
+
+  /// -- Déconnexion
+
+  Future<void> logout() async {
+    try {
+      print('logout');
+      await _auth.signOut();
+      await deviceStorage.remove('pending_user_data');
+      Get.offAll(() => const LoginScreen());
+    } catch (e) {
+      print('logout error: $e');
       rethrow;
     }
   }

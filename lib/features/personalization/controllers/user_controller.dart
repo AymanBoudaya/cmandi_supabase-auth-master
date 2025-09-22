@@ -49,7 +49,7 @@ class UserController extends GetxController {
     }
   }
 
-  /// Save user Record from any registration provider
+  /// Enregistrer les donnnées utilisateur
   Future<void> saveUserRecord(User? supabaseUser) async {
     try {
       if (supabaseUser != null) {
@@ -81,38 +81,6 @@ class UserController extends GetxController {
       );
     }
   }
-
-  /// Delete account Warning
-  /* void deleteAccountWarningPopup() { Get.defaultDialog( contentPadding: const EdgeInsets.all(AppSizes.md), title: 'Supprimer compte', middleText: "Êtes vous sûr? Cette action est irréversible et supprimera toutes vos données.", confirm: ElevatedButton( onPressed: () async => deleteUserAccount(), style: ElevatedButton.styleFrom( backgroundColor: Colors.red, side: const BorderSide(color: Colors.red), ), child: const Padding( padding: EdgeInsets.symmetric(horizontal: AppSizes.lg), child: Text("Supprimer"), ), ), cancel: OutlinedButton( onPressed: () => Navigator.of(Get.overlayContext!).pop(), child: const Text('Annuler')), ); }*/
-
-  /// Delet user account
-  /* void deleteUserAccount() async { try { // Start Loading TFullScreenLoader.openLoadingDialog( "Nous sommes en train de supprimer votre compte...", TImages.docerAnimation); /// First re-authenticate the user final auth = AuthenticationRepository.instance; final provider = auth.authUser!.providerData.map((e) => e.providerId).first; if (provider.isNotEmpty) { // Reverify auth email if (provider == 'google.com') { await auth.signInWithGoogle(); await auth.deleteAccount(); TFullScreenLoader.stopLoading(); Get.offAll(() => const LoginScreen()); } else if (provider == 'password') { TFullScreenLoader.stopLoading(); Get.to(() => const ReAuthLoginForm()); } } } catch (e) { // Remove Loader TFullScreenLoader.stopLoading(); // Show error message TLoaders.warningSnackBar(title: "Erreur", message: e.toString()); } }*/
-  /*Future<void> reAuthenticateEmailAndPasswordUser() async {
-    try {
-      TFullScreenLoader.openLoadingDialog(
-          "Nous sommes en train de vérifier votre compte...",
-          TImages.docerAnimation);
-      // Check internet connection
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        TFullScreenLoader.stopLoading();
-        return;
-      }
-      if (!reAuthFormKey.currentState!.validate()) {
-        TFullScreenLoader.stopLoading();
-        return;
-      }
-      await AuthenticationRepository.instance
-          .reAuthenticateWithEmailAndPassword(
-              verifyEmail.text.trim(), verifyPassword.text.trim());
-      await AuthenticationRepository.instance.deleteAccount();
-      TFullScreenLoader.stopLoading();
-      Get.offAll(() => const LoginScreen());
-    } catch (e) {
-      TFullScreenLoader.stopLoading();
-      TLoaders.warningSnackBar(title: "Erreur!", message: e.toString());
-    }
-  }*/
 
   Future<void> updateProfileImage(XFile pickedFile) async {
     try {

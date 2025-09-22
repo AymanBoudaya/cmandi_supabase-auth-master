@@ -76,7 +76,7 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 )),
 
-                /// Profile Picture card
+                /// Carte du profil avec nom et email
                 TUserProfileTile(
                     onPressed: () => Get.to(() => const ProfileScreen())),
                 const SizedBox(height: AppSizes.spaceBtwSections),

@@ -63,7 +63,7 @@ class OTPVerificationController extends GetxController {
 
       await _authRepo.verifyOTP(email: email, otp: otp);
 
-      // Succès → navigation déjà gérée dans AuthenticationRepository
+      // Succès => navigation déjà gérée dans AuthenticationRepository
     } catch (e) {
       TLoaders.errorSnackBar(
         title: "Erreur",
@@ -90,8 +90,7 @@ class OTPVerificationController extends GetxController {
 
       isLoading.value = true;
 
-      await _authRepo.sendOtp(
-          email); // 👉 tu dois avoir déjà `sendOtp(email)` dans ton repo
+      await _authRepo.sendOtp(email);
 
       TLoaders.successSnackBar(
         title: "Code envoyé",
