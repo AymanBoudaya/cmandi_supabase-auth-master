@@ -35,26 +35,26 @@ class AuthenticationRepository extends GetxController {
         if (event == AuthChangeEvent.signedIn && session != null) {
           // Si signup en cours (pending data), on ne redirige pas encore
           if (pending != null) {
-            print('Signup flow en cours, attente de vérification OTP');
+            print('Inscription flow en cours, attente de vérification OTP');
             return;
           }
 
           // Cas login normal
-          print('Signed in — récupération des infos utilisateur');
+          print('Connecté — récupération des infos utilisateur');
           try {
             await UserRepository.instance.fetchUserDetails();
           } catch (e) {
-            print('fetchUserDetails error: $e');
+            print('Détails utilisateur erreur de chargement: $e');
           }
           await TLocalStorage.init(session.user.id);
           Get.offAll(() => const NavigationMenu());
         } else if (event == AuthChangeEvent.signedOut) {
-          print('Signed out — nettoyage et retour Login');
+          print('Déconnexion — nettoyage et retour Login');
           await deviceStorage.remove('pending_user_data');
           Get.offAll(() => const LoginScreen());
         }
       } catch (e) {
-        print('Error in auth state change handler: $e');
+        print('Erreur dans auth state change handler: $e');
       }
     });
 
@@ -152,7 +152,7 @@ class AuthenticationRepository extends GetxController {
         emailRedirectTo: null,
       );
     } catch (e, st) {
-      print('resendOTP error: $e\n$st');
+      print('resendOTP erreur: $e\n$st');
       rethrow;
     }
   }
@@ -257,7 +257,7 @@ class AuthenticationRepository extends GetxController {
       print('AuthException signInWithGoogle: ${e.message}\n$st');
       rethrow;
     } catch (e, st) {
-      print('Unknown error signInWithGoogle: $e\n$st');
+      print('Erreur inconnue signInWithGoogle: $e\n$st');
       rethrow;
     }
   }
@@ -271,7 +271,7 @@ class AuthenticationRepository extends GetxController {
       await deviceStorage.remove('pending_user_data');
       Get.offAll(() => const LoginScreen());
     } catch (e) {
-      print('logout error: $e');
+      print('logout erreur: $e');
       rethrow;
     }
   }

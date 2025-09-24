@@ -35,13 +35,13 @@ class TUserProfileTile extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // User info
+            // infos utilisateur
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Full Name
+                  // Nom complet
                   Text(
                     controller.user.value.fullName,
                     style: Theme.of(context)
@@ -66,7 +66,7 @@ class TUserProfileTile extends StatelessWidget {
               ),
             ),
 
-            // Edit button
+            // Bouton modifier
             IconButton(
               onPressed: onPressed,
               icon: const Icon(Iconsax.edit, color: AppColors.white),

@@ -16,7 +16,7 @@ class UserModel {
   final DateTime? updatedAt;
   String? profileImageUrl;
 
-  /// constructor for usermodel
+  /// constructeur
   UserModel({
     this.id = '',
     required this.email,
@@ -34,16 +34,15 @@ class UserModel {
     this.profileImageUrl,
   });
 
-  /// Helper function to get the full name
+  /// Fonction Helper
   String get fullName => '$firstName $lastName';
 
-  /// Helper function to format phone number
   String get formattedPhoneNo => TFormatter.formatPhoneNumber(phone);
 
-  /// Static function to split full name into first and last name
+  /// Décomposer par une fonction
   static List<String> nameParts(String fullName) => fullName.split(" ");
 
-  /// Static function to generate a username from the full name
+  /// Générer nom d'utilisateur
   static String generateUsername(String fullName) {
     List<String> nameParts = fullName.split(" ");
     String firstName = nameParts[0].toLowerCase();

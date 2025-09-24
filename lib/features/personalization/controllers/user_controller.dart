@@ -30,7 +30,7 @@ class UserController extends GetxController {
         fetchUserRecord();
       } else {
         user(UserModel.empty());
-        debugPrint("👤 Utilisateur déconnecté");
+        debugPrint("Utilisateur déconnecté");
       }
     });
   }
@@ -53,11 +53,11 @@ class UserController extends GetxController {
   Future<void> saveUserRecord(User? supabaseUser) async {
     try {
       if (supabaseUser != null) {
-        // Convertir Name en First and Last Name (si displayName est stocké côté Supabase metadata)
+        // Convertir Name en First and Last Name
         final displayName = supabaseUser.userMetadata?['full_name'] ?? '';
         final nameParts = UserModel.nameParts(displayName);
         final username = UserModel.generateUsername(displayName);
-        // Map data (adapter selon ton modèle UserModel)
+        // Map data
         final user = UserModel(
           id: supabaseUser.id,
           email: supabaseUser.email ?? '',
@@ -101,7 +101,7 @@ class UserController extends GetxController {
           .from('profile_images')
           .getPublicUrl(path);
 
-      debugPrint("✅ Image uploaded. Public URL: $publicUrl");
+      debugPrint("Image uploaded. Public URL: $publicUrl");
 
       // Mettre à jour la table users
       await Supabase.instance.client
@@ -116,7 +116,7 @@ class UserController extends GetxController {
       TLoaders.successSnackBar(
           title: 'Succès', message: 'Photo de profil mise à jour !');
     } catch (e, st) {
-      debugPrint("❌ Erreur updateProfileImage: $e\n$st");
+      debugPrint("Erreur updateProfileImage: $e\n$st");
       TLoaders.warningSnackBar(title: 'Erreur', message: e.toString());
     }
   }

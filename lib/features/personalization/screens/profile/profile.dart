@@ -25,12 +25,12 @@ class ProfileScreen extends GetView<UserController> {
         },
       ),
       body: Obx(() {
-        // Check if profile is loading
+        // si le profil est en chargement
         if (controller.profileLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // Get the current user
+        // Charger utilisateur courant
         final user = controller.user.value;
 
         return SingleChildScrollView(

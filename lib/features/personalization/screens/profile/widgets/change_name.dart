@@ -13,13 +13,12 @@ class ChangeName extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(UpdateNameController());
     return Scaffold(
-      /// Custom AppBar
+      /// AppBar Personnalisé
       appBar: TAppBar(
         showBackArrow: true,
         title: Text('Modifier le nom',
             style: Theme.of(context).textTheme.headlineSmall),
         customBackNavigation: () {
-          // Simple back navigation for back button
           Get.back(result: false);
         },
       ),
@@ -28,7 +27,7 @@ class ChangeName extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Headings
+            /// En tetes
             ///
             Text(
                 "Utiliser un nom réel, ce nom va appraître dans plusieurs pages",

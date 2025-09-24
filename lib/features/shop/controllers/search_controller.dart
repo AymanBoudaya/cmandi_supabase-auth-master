@@ -24,7 +24,7 @@ class ProductSearchController extends GetxController {
   void onInit() {
     super.onInit();
     searchController.addListener(_onSearchChanged);
-    _onSearchChanged(); // Initial trigger
+    _onSearchChanged();
   }
 
   void _onSearchChanged() {

@@ -52,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          /// Header
+          /// En tete
           TPrimaryHeaderContainer(
             child: Column(
               children: [
@@ -84,12 +84,10 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
 
-          /// Body
-          ///
           Padding(
               padding: EdgeInsets.all(AppSizes.defaultSpace),
               child: Column(children: [
-                /// Account Settings
+                /// Paramètres du compte
                 TSectionHeading(
                   title: "Réglages du compte",
                   showActionButton: false,
@@ -132,7 +130,7 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.security_card,
                     onTap: () {}),
 
-                /// App Settings
+                /// Paramètres de l'app
                 SizedBox(height: AppSizes.spaceBtwSections),
                 TSectionHeading(title: "Paramètres", showActionButton: false),
                 SizedBox(height: AppSizes.spaceBtwItems),
@@ -154,7 +152,7 @@ class SettingsScreen extends StatelessWidget {
                     subTitle: "Définir la qualité d'image haute définition",
                     trailing: Switch(value: false, onChanged: (value) {})),
 
-                /// Developer Section - Dummy Data Upload
+                /// Développeur , upload
                 SizedBox(height: AppSizes.spaceBtwSections),
                 TSectionHeading(
                     title: "Développement", showActionButton: false),
