@@ -31,9 +31,6 @@ class AuthenticationRepository extends GetxController {
       final session = data.session;
       final pending = deviceStorage.read('pending_user_data');
 
-      print(
-          '🔔 onAuthStateChange event: $event, session: ${session != null}, pending_user_data: ${pending != null}');
-
       try {
         if (event == AuthChangeEvent.signedIn && session != null) {
           // Si signup en cours (pending data), on ne redirige pas encore

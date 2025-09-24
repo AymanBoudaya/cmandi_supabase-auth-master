@@ -3,10 +3,10 @@ import 'package:caferesto/utils/formatters/formatter.dart';
 class UserModel {
   final String id;
   final String email;
-  final String username;
+  String username;
   String firstName;
   String lastName;
-  final String phone;
+  String phone;
   final String role;
   final DateTime? dateOfBirth;
   final String? sex;
@@ -18,7 +18,7 @@ class UserModel {
 
   /// constructor for usermodel
   UserModel({
-    this.id='',
+    this.id = '',
     required this.email,
     required this.username,
     required this.firstName,

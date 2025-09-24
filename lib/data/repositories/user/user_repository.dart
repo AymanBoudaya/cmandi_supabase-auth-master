@@ -46,7 +46,7 @@ class UserRepository extends GetxController {
       final response =
           await _client.from(_table).select().eq('id', targetId).maybeSingle();
 
-      print('📥 fetchUserDetails($targetId) response: $response');
+      print('fetchUserDetails($targetId) response: $response');
 
       if (response == null) return null;
 

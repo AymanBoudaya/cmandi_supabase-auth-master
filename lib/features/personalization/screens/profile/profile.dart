@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
@@ -21,6 +20,9 @@ class ProfileScreen extends GetView<UserController> {
       appBar: TAppBar(
         showBackArrow: true,
         title: const Text('Mon Profil'),
+        customBackNavigation: () {
+          Get.back();
+        },
       ),
       body: Obx(() {
         // Check if profile is loading
@@ -78,10 +80,9 @@ class ProfileScreen extends GetView<UserController> {
                 const SizedBox(height: AppSizes.spaceBtwItems),
 
                 TProfileMenu(
-                  title: "Nom",
-                  value: "${user.firstName} ${user.lastName}",
-                  onPressed: () => Get.to(() => const ChangeName()),
-                ),
+                    title: "Nom",
+                    value: "${user.firstName} ${user.lastName}",
+                    onPressed: () => Get.to(() => const ChangeName())),
                 TProfileMenu(
                   title: "Nom d'utilisateur",
                   value: user.username,
@@ -97,13 +98,6 @@ class ProfileScreen extends GetView<UserController> {
                   showActionButton: false,
                 ),
                 const SizedBox(height: AppSizes.spaceBtwItems),
-
-                TProfileMenu(
-                  title: "ID utilisateur",
-                  value: user.id,
-                  icon: Iconsax.copy,
-                  onPressed: () {},
-                ),
                 TProfileMenu(
                   title: "E-mail",
                   value: user.email,

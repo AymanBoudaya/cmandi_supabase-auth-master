@@ -18,6 +18,10 @@ class ChangeName extends StatelessWidget {
         showBackArrow: true,
         title: Text('Modifier le nom',
             style: Theme.of(context).textTheme.headlineSmall),
+        customBackNavigation: () {
+          // Simple back navigation for back button
+          Get.back(result: false);
+        },
       ),
       body: Padding(
         padding: EdgeInsets.all(AppSizes.defaultSpace),
@@ -53,6 +57,28 @@ class ChangeName extends StatelessWidget {
                       hintText: 'Entrez votre nom',
                     ),
                   ),
+                  const SizedBox(
+                    height: AppSizes.spaceBtwInputFields,
+                  ),
+                  TextFormField(
+                    controller: controller.username,
+                    validator: (value) =>
+                        TValidator.validateEmptyText("Nom d'utilsateur", value),
+                    decoration: const InputDecoration(
+                        labelText: "Nom d'utilisateur",
+                        hintText: "Entrez votre nom d'utilisateur"),
+                  ),
+                  const SizedBox(
+                    height: AppSizes.spaceBtwInputFields,
+                  ),
+                  TextFormField(
+                    controller: controller.phone,
+                    validator: (value) =>
+                        TValidator.validateEmptyText("Téléphone", value),
+                    decoration: const InputDecoration(
+                        labelText: "Téléphone",
+                        hintText: "Entrez votre numéro de téléphone"),
+                  )
                 ],
               ),
             ),
