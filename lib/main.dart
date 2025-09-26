@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app.dart';
@@ -30,6 +31,9 @@ Future<void> main() async {
 
   // Injecter votre repository d'authentification (à remplacer par votre implémentation)
   Get.put(AuthenticationRepository());
+
+  // Utiliser la stratégie d'URL basée sur le chemin pour Flutter web (optionnel)
+  usePathUrlStrategy();
 
   // Lancer le widget principal de l'application
   runApp(App());
