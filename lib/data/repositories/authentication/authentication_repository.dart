@@ -107,7 +107,7 @@ class AuthenticationRepository extends GetxController {
   Future<void> signUpWithEmailOTP(
       String email, Map<String, dynamic> userData) async {
     try {
-      print('Signup OTP → $email');
+      print('Signup OTP => $email');
       await deviceStorage.write('pending_user_data', {
         'email': email,
         'user_data': userData,
@@ -120,7 +120,7 @@ class AuthenticationRepository extends GetxController {
         emailRedirectTo: null,
       );
     } catch (e, st) {
-      print('signUpWithEmailOTP error: $e\n$st');
+      print('Erreur de signUpWithEmailOTP : $e\n$st');
       rethrow;
     }
   }

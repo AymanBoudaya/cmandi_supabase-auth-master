@@ -37,9 +37,6 @@ class ProductSearchController extends GetxController {
         searchedProducts.assignAll(allProductsController.products);
       } else {
         isLoading.value = true;
-        // final queryObject = Query(text);
-        //final results = await allProductsController.fetchProductsByQuery(queryObject);
-        // searchedProducts.assignAll(results);
         isLoading.value = false;
       }
     });
