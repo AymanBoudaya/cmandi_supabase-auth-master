@@ -17,21 +17,16 @@ class UserRepository extends GetxController {
   /// Sauvegarder ou mettre à jour un utilisateur
   Future<void> saveUserRecord(UserModel user) async {
     try {
-      print('🔁 UserRepository.saveUserRecord → ${user.toJson()}');
-
-      final resp = await _client
+      await _client
           .from(_table)
           .upsert(user.toJson(), onConflict: 'id')
           .select()
           .maybeSingle();
-
-      print('✅ User upsert OK: $resp');
     } on PostgrestException catch (e) {
-      print('❌ PostgrestException saveUserRecord: ${e.message}');
-      rethrow;
+      throw Exception(
+          'Exception PostgrestException saveUserRecord: ${e.message}');
     } catch (e, st) {
-      print('❌ Unknown error saveUserRecord: $e\n$st');
-      rethrow;
+      throw Exception('Unknown error saveUserRecord: $e\n$st');
     }
   }
 
@@ -45,9 +40,6 @@ class UserRepository extends GetxController {
 
       final response =
           await _client.from(_table).select().eq('id', targetId).maybeSingle();
-
-      print('fetchUserDetails($targetId) response: $response');
-
       if (response == null) return null;
 
       return UserModel.fromJson({
@@ -64,10 +56,8 @@ class UserRepository extends GetxController {
       throw const TFormatException();
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
-    } catch (e, stack) {
-      print("❌ fetchUserDetails error: $e");
-      print(stack);
-      rethrow;
+    } catch (e) {
+      throw Exception("Erreur fetchUserDetails : $e");
     }
   }
 
@@ -81,7 +71,6 @@ class UserRepository extends GetxController {
           .select();
 
       if (response.isEmpty) throw 'Update failed.';
-      print("✅ updateUserDetails OK: ${updatedUser.id}");
     } on AuthException catch (e) {
       throw SupabaseAuthException(
         e.message,
@@ -92,15 +81,13 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
     } catch (e) {
-      throw '❌ Something went wrong in updateUserDetails: $e';
+      throw Exception('Something went wrong in updateUserDetails: $e');
     }
   }
 
   /// Mettre à jour un champ spécifique
   Future<void> updateSingleField(Map<String, dynamic> json) async {
     try {
-      print('🔄 updateSingleField: $json');
-
       final userId = AuthenticationRepository.instance.authUser?.id;
       if (userId == null) throw 'No authenticated user.';
 
@@ -108,7 +95,6 @@ class UserRepository extends GetxController {
           await _client.from(_table).update(json).eq('id', userId).select();
 
       if (response.isEmpty) throw 'Update failed.';
-      print('✅ updateSingleField OK: $response');
     } on AuthException catch (e) {
       throw SupabaseAuthException(
         e.message,
@@ -119,7 +105,7 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
     } catch (e) {
-      throw '❌ Something went wrong in updateSingleField: $e';
+      throw Exception('Something went wrong in updateSingleField: $e');
     }
   }
 
@@ -129,7 +115,6 @@ class UserRepository extends GetxController {
       final response = await _client.from(_table).delete().eq('id', userId);
 
       if (response.isEmpty) throw 'Delete failed.';
-      print("🗑 removeUserRecord OK: $userId");
     } on AuthException catch (e) {
       throw SupabaseAuthException(
         e.message,
@@ -140,7 +125,7 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw TPlatformException(e.code).message;
     } catch (e) {
-      throw '❌ Something went wrong in removeUserRecord: $e';
+      throw 'Something went wrong in removeUserRecord: $e';
     }
   }
 }

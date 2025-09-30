@@ -13,7 +13,7 @@ class CategoryRepository extends GetxController {
   /// Variables
   final _db = Supabase.instance.client;
 
-  /// Get all categories
+  /// Charger toutes les categories
   Future<List<CategoryModel>> getAllCategories() async {
     try {
       final response =
@@ -28,7 +28,7 @@ class CategoryRepository extends GetxController {
     }
   }
 
-  /// Get sub categories
+  /// Charger sous-categories
   Future<List<CategoryModel>> getSubCategories(String categoryId) async {
     try {
       final response = await _db
@@ -43,6 +43,21 @@ class CategoryRepository extends GetxController {
       throw TPlatformException(e.code).message;
     } catch (e) {
       throw 'Echec de récupération des catégories : ${e.toString()}';
+    }
+  }
+
+  Future<void> addCategory(CategoryModel category) async {
+    try {
+      final response = await _db.from('categories').insert(category.toJson());
+      if (response.error != null) {
+        throw response.error!.message;
+      }
+    } on SupabaseException catch (e) {
+      throw SupabaseException(e.code).message;
+    } on PostgrestException catch (e) {
+      throw 'Erreur base de données : ${e.code} - ${e.message}';
+    } catch (e) {
+      throw "Erreur lors de l'ajout de la catégorie.";
     }
   }
 

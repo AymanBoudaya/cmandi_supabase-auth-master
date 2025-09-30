@@ -1,6 +1,7 @@
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:caferesto/common/widgets/texts/section_heading.dart';
+import 'package:caferesto/features/personalization/screens/categories/add_category_screen.dart';
 import 'package:caferesto/features/personalization/screens/profile/profile.dart';
 import 'package:caferesto/features/shop/screens/order/order.dart';
 import 'package:caferesto/utils/constants/colors.dart';
@@ -25,6 +26,11 @@ class SettingsScreen extends StatelessWidget {
     final controller = ProductRepository.instance;
     final categoryController = CategoryRepository.instance;
     final userController = Get.put(UserController());
+
+    bool canAddCategory() {
+      final role = userController.user.value.role;
+      return role == 'Gérant' || role == 'Admin';
+    }
 
     void uploadDummyData() async {
       try {
@@ -164,12 +170,13 @@ class SettingsScreen extends StatelessWidget {
                   onTap: uploadDummyData,
                 ),
                 SizedBox(height: AppSizes.spaceBtwItems),
-                TSettingsMenuTile(
-                  icon: Iconsax.document_upload,
-                  title: "Charger des catégories factices",
-                  subTitle: "Insère des données test dans l'application",
-                  onTap: uploadDummyCategories,
-                ),
+                if (canAddCategory())
+                  TSettingsMenuTile(
+                    icon: Iconsax.add,
+                    title: "Ajouter une catégorie",
+                    subTitle: "Insère une nouvelle catégorie",
+                    onTap: () => Get.to(() => AddCategoryScreen()),
+                  ),
                 SizedBox(
                   height: AppSizes.spaceBtwSections,
                 ),
